@@ -50,7 +50,7 @@ print(is_palindrome('Amma'))
 def calculate_factorial(number1):
     fac = 1
     for i in range(1, number1+1):
-         fac *= i
+        fac *= i
     return fac
 
 print(calculate_factorial(5))
