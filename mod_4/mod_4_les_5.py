@@ -1,7 +1,6 @@
-OPEN_BRACKETS = ['(', '[', '{']
-CLOSE_BRACKETS = {')': '(', ']': '[', '}': '{'}
-
 class Stack:
+    OPEN_BRACKETS = ['(', '[', '{']
+    CLOSE_BRACKETS = {')': '(', ']': '[', '}': '{'}
     def __init__(self):
         self.items = []
 
@@ -22,23 +21,29 @@ class Stack:
             return self.items.pop()
         else:
             raise IndexError("Стек пуст")
+    
+    def is_bracket_sequence_balanced(self, bracket_sequence):
+        balanced = True
+        for bracket in bracket_sequence:
+            if bracket in Stack.OPEN_BRACKETS:
+                self.push(bracket)
+            elif bracket in Stack.CLOSE_BRACKETS:
+                if not self.is_empty() and self.peek() == Stack.CLOSE_BRACKETS[bracket]:
+                    self.pop()
+                else:
+                    balanced = False
+                    break
+            else:
+                balanced = False
+                break
+        
+        if balanced and self.is_empty():
+            result = "Сбалансированная скобочная последовательность"
+        else:
+            result = "Несбалансированная скобочная последовательность"
 
+        return result
 
 my_stack = Stack()
-balanced = True
-parenthesis_sequence = ['[', '(', '{', '(', ')', '}', ')', ']', '[', ']']
-
-for i in parenthesis_sequence:
-    if i in OPEN_BRACKETS:
-        my_stack.push(i)
-    elif i in CLOSE_BRACKETS:
-        if not my_stack.is_empty() and my_stack.peek() == CLOSE_BRACKETS[i]:
-            my_stack.pop()
-        else:
-            balanced = False
-            break
-
-if balanced and my_stack.is_empty():
-    print("Сбалансированная скобочная последовательность")
-else:
-    print("Несбалансированная скобочная последовательность")
+bracket_sequence = ['[', '(', '{', '(', ')', '}', ')', ']', '[', ']', ']']
+print(my_stack.is_bracket_sequence_balanced(bracket_sequence))
