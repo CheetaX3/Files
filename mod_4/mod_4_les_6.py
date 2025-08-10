@@ -17,33 +17,42 @@ class Stack:
     def size(self):
         return len(self.items)
 
-rpn = '12-34+*/'
+    def evaluate_rpn(self, rpn):
+        rpn = rpn.split()
+        for token in rpn:
+            if token.isdigit():
+                self.push(int(token))
+            else:
+                if self.size() < 2:
+                    raise ValueError('Ошибка: недостаточно операндов для операции')
+                b = self.pop()
+                a = self.pop()
+
+                if token == '+':
+                    self.push(a + b)
+                elif token == '-':
+                    self.push(a - b)
+                elif token == '*':
+                    self.push(a * b)
+                elif token == '/':
+                    if b == 0:
+                        raise ZeroDivisionError("Ошибка: деление на ноль")
+                    self.push(a / b)
+                else:
+                    raise ValueError(f"Неизвестный оператор: {token}")
+
+        if self.size() != 1:
+            raise ValueError("Ошибка: выражение некорректно")
+
+        return self.pop()
+
+
+# Пример
+rpn = '80 0 3 4 + * /'
 stack = Stack()
-error_occurred = False
 
-for i in rpn:
-    try:
-        if i in '0123456789':
-            stack.push(int(i))
-        else:
-            if stack.size()  < 2:
-                raise ValueError ('Ошибка: недостаточно операндов для операции')
-            b = stack.pop()
-            a = stack.pop()
-            if i == '+':
-                stack.push(a + b)
-            elif i == '-':
-                stack.push(a - b)
-            elif i == '*':
-                stack.push(a * b)
-            elif i == '/':
-                stack.push(a / b)
-    except ValueError as e:
-        print(e)
-        error_occurred = True
-        break
-
-if not error_occurred and stack.size() == 1:
-    print("Результат:", stack.pop())
-elif not error_occurred:
-    print("Ошибка: выражение некорректно")
+try:
+    result = stack.evaluate_rpn(rpn)
+    print("Результат:", result)
+except (ValueError, ZeroDivisionError, IndexError) as e:
+    print(e)
