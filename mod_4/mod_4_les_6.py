@@ -17,42 +17,41 @@ class Stack:
     def size(self):
         return len(self.items)
 
-    def evaluate_rpn(self, rpn):
-        rpn = rpn.split()
-        for token in rpn:
-            if token.isdigit():
-                self.push(int(token))
+def evaluate_rpn(rpn):
+    stack = Stack()
+    rpn = rpn.split()
+    for token in rpn:
+        if token.isdigit():
+            stack.push(int(token))
+        else:
+            if stack.size() < 2:
+                raise ValueError('Ошибка: недостаточно операндов для операции')
+            b = stack.pop()
+            a = stack.pop()
+
+            if token == '+':
+                stack.push(a + b)
+            elif token == '-':
+                stack.push(a - b)
+            elif token == '*':
+                stack.push(a * b)
+            elif token == '/':
+                if b == 0:
+                    raise ZeroDivisionError("Ошибка: деление на ноль")
+                stack.push(a / b)
             else:
-                if self.size() < 2:
-                    raise ValueError('Ошибка: недостаточно операндов для операции')
-                b = self.pop()
-                a = self.pop()
+                raise ValueError(f"Неизвестный оператор: {token}")
 
-                if token == '+':
-                    self.push(a + b)
-                elif token == '-':
-                    self.push(a - b)
-                elif token == '*':
-                    self.push(a * b)
-                elif token == '/':
-                    if b == 0:
-                        raise ZeroDivisionError("Ошибка: деление на ноль")
-                    self.push(a / b)
-                else:
-                    raise ValueError(f"Неизвестный оператор: {token}")
+    if stack.size() != 1:
+        raise ValueError("Ошибка: выражение некорректно")
 
-        if self.size() != 1:
-            raise ValueError("Ошибка: выражение некорректно")
-
-        return self.pop()
+    return stack.pop()
 
 
-# Пример
-rpn = '80 0 3 4 + * /'
-stack = Stack()
+rpn = '80 1 3 4 + * /'
 
 try:
-    result = stack.evaluate_rpn(rpn)
+    result = evaluate_rpn(rpn)
     print("Результат:", result)
 except (ValueError, ZeroDivisionError, IndexError) as e:
     print(e)
