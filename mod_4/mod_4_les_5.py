@@ -22,28 +22,22 @@ class Stack:
         else:
             raise IndexError("Стек пуст")
     
-    def is_bracket_sequence_balanced(self, bracket_sequence):
-        balanced = True
-        for bracket in bracket_sequence:
-            if bracket in Stack.OPEN_BRACKETS:
-                self.push(bracket)
-            elif bracket in Stack.CLOSE_BRACKETS:
-                if not self.is_empty() and self.peek() == Stack.CLOSE_BRACKETS[bracket]:
-                    self.pop()
-                else:
-                    balanced = False
-                    break
+def is_bracket_sequence_balanced(sequence):
+    BRACKET_PAIRS = {'}': '{', ']': '[', ')': '('}
+    OPEN_BRACKETS = BRACKET_PAIRS.values()
+
+    stack = Stack()
+    for bracket in sequence:
+        if bracket in OPEN_BRACKETS:
+            stack.push(bracket)
+        elif bracket in BRACKET_PAIRS:
+            if not stack.is_empty() and stack.peek() == BRACKET_PAIRS[bracket]:
+                stack.pop()
             else:
-                balanced = False
-                break
-        
-        if balanced and self.is_empty():
-            result = "Сбалансированная скобочная последовательность"
+                return False
         else:
-            result = "Несбалансированная скобочная последовательность"
+            return False
+    return stack.is_empty()
 
-        return result
-
-my_stack = Stack()
-bracket_sequence = ['[', '(', '{', '(', ')', '}', ')', ']', '[', ']', ']']
-print(my_stack.is_bracket_sequence_balanced(bracket_sequence))
+sequence = ['[', '(', '{', '(', ')', '}', ')', ']', '[', ']', ']']
+print(is_bracket_sequence_balanced(sequence))
