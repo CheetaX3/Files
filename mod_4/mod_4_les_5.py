@@ -1,6 +1,4 @@
 class Stack:
-    OPEN_BRACKETS = ['(', '[', '{']
-    CLOSE_BRACKETS = {')': '(', ']': '[', '}': '{'}
     def __init__(self):
         self.items = []
 
