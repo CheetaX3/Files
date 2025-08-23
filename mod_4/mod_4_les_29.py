@@ -1,40 +1,41 @@
 class MyDict:
-    # Инициализация пустого словаря
     def __init__(self):
-        self._data = {}
+        self._data = []  # список пар [ключ, значение]
 
-    # Получение значения по ключу, если нет — вернуть None
     def __getitem__(self, key):
-        return self._data.get(key, None)
+        for k, v in self._data:
+            if k == key:
+                return v
+        return None
 
-    # Установка значения по ключу
     def __setitem__(self, key, value):
-        self._data[key] = value
+        for pair in self._data:
+            if pair[0] == key:
+                pair[1] = value
+                return
+        self._data.append([key, value])
 
-    # Удаление элемента по ключу, если он существует
     def __delitem__(self, key):
-        if key in self._data:
-            del self._data[key]
-
-    # Проверка наличия ключа
+        for i, (k, v) in enumerate(self._data):
+            if k == key:
+                del self._data[i]
+                return
+   
     def __contains__(self, key):
-        return key in self._data
-    
-    # Возвращает список всех ключей
+        return any(k == key for k, _ in self._data)
+
     def keys(self):
-        return list(self._data.keys())
+        return [k for k, _ in self._data]
 
-    # Возвращает список всех значений
     def values(self):
-        return list(self._data.values())
+        return [v for _, v in self._data]
 
-    # Возвращает список пар (ключ, значение)
     def items(self):
-        return list(self._data.items())
+        return [(k, v) for k, v in self._data]
 
-    # Возвращает строковое представление словаря
     def __str__(self):
-        return str(self._data)
+        # превращаем список пар в строку в формате словаря
+        return "{" + ", ".join(f"{repr(k)}: {repr(v)}" for k, v in self._data) + "}"
 
 
 my_dict = MyDict()
@@ -45,3 +46,4 @@ print('city' in my_dict)  # Вернет False
 del my_dict['age']
 print(my_dict.keys())  # Вернет ['name']
 print(my_dict.values())  # Вернет ['Alice']
+print(my_dict)
