@@ -4,10 +4,10 @@ import json
 import csv
 
 BASE_DIR = Path(__file__).parent
-json_path = BASE_DIR / "employees.json"
-csv_path = BASE_DIR / "performance.csv"
+json_path = BASE_DIR / 'employees.json'
+csv_path = BASE_DIR / 'performance.csv'
 
-with open(json_path, "r", encoding="utf-8-sig") as json_file:
+with open(json_path, "r", encoding="utf-8-sig",newline="") as json_file:
     employees = json.load(json_file)
 
 with open(csv_path, "r", encoding="utf-8-sig", newline="") as csv_file:
