@@ -1,13 +1,13 @@
 # задание 1
+from pathlib import Path
 import csv
 
-txt_path = r'mod_5\mod_5_les_2\prices.txt'
-csv_path = r'mod_5\mod_5_les_2\prices.csv'
+BASE_DIR = Path(__file__).parent
+txt_path = BASE_DIR / 'prices.txt'
+csv_path = BASE_DIR / 'prices.csv'
 
 with open(txt_path, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-
-data = [line.strip().split('\t') for line in lines]
+    data = [line.strip().split('\t') for line in f]
 
 with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
     writer = csv.writer(csvfile, delimiter=';')
@@ -15,8 +15,6 @@ with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
 
 
 # задание 2
-csv_path = r'mod_5\mod_5_les_2\prices.csv'
-
 with open(csv_path, 'r', encoding='utf-8') as f:
     reader = csv.reader(f, delimiter=';')
     next(reader)
