@@ -1,14 +1,26 @@
-import csv
+from pathlib import Path
 import json
 
-csv_path = r'mod_5\mod_5_les_3\prices.csv'
-json_path = r'mod_5\mod_5_les_3\prices.json'
 
-with open(csv_path, 'r', encoding='utf-8') as f:
-    reader = csv.DictReader(f, delimiter=';')
-    
-    rows = list(reader)
-    print(rows)
+def csv_to_dicts(csv_path, delimiter=";"):
+    """Преобразует CSV в список словарей, где первая строка — заголовки."""
+    with open(csv_path, "r", encoding="utf-8") as f:
+        lines = [line.strip().split(delimiter) for line in f]
 
-with open(json_path, 'w', encoding='utf-8') as f:
-    json.dump(rows, f, ensure_ascii=False, indent=4)
+    headers = lines[0]
+    rows = lines[1:]
+
+    result = []
+    for row in rows:
+        pairs = zip(headers, row)
+        d = dict(pairs)
+        result.append(d)
+
+    return result
+
+
+BASE_DIR = Path(__file__).parent
+csv_path = BASE_DIR / "prices.csv"
+
+data = csv_to_dicts(csv_path)
+print(json.dumps(data, ensure_ascii=False, indent=4))
