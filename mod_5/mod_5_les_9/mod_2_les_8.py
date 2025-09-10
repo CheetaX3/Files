@@ -86,6 +86,8 @@ def save_user_timezone(message):
 @bot.message_handler(func=lambda msg: msg.text == "😴 Уснул")
 def sleep_button(message):
     user_id = message.from_user.id
+    if user_id not in users_timezone:
+        users_timezone[user_id] = DEFAULT_TIMEZONE
     now = datetime.now() + timedelta(hours=users_timezone[user_id])
     now_str = now.strftime("%H:%M:%S %d-%m-%Y")
     users_data[user_id] = {"start_time": now_str}
@@ -162,12 +164,19 @@ def save_message_to_json(message):
 
     required_fields = ["start_time", "stop_time", "duration", "quality", "note"]
     if not all(key in users_data.get(user_id, {}) for key in required_fields):
-        bot.send_message(message.chat.id, "Не все данные заполнены. Пожалуйста, укажите время сна, пробуждения, оценку и заметку.")
+        bot.send_message(
+            message.chat.id,
+            "Не все данные заполнены. Укажите время сна, пробуждения, оценку и заметку."
+        )
         return
 
-    if os.path.exists(DATA_FILE):
+    # Загружаем данные (с проверкой на пустой файл)
+    if os.path.exists(DATA_FILE) and os.path.getsize(DATA_FILE) > 0:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                data = {}
     else:
         data = {}
 
@@ -185,18 +194,19 @@ def save_message_to_json(message):
     else:
         data[user_id_str] = [entry]
 
+    # Сохраняем обратно
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     bot.send_message(message.chat.id, f"""
-        Вы 
+        ✅ Данные сохранены!
         - уснули в {users_data[user_id]['start_time']}
         - проснулись в {users_data[user_id]['stop_time']}
-        - время сна: {round(users_data[user_id]['duration'], 2)} часов
-        - оценка: {round(users_data[user_id]['quality'], 2)}
+        - время сна: {round(users_data[user_id]['duration'], 2)} ч.
+        - оценка: {users_data[user_id]['quality']}
         - заметка: {users_data[user_id]['note']}
-        """)
-print(users_data)
+    """)
+
 
 @bot.message_handler(func=lambda msg: msg.text == "📈 Статистика")
 def statistics_button(message):
