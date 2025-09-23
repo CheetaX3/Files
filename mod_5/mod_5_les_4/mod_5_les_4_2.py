@@ -2,9 +2,15 @@
 from pathlib import Path
 import csv
 import locale
+import platform
 import datetime
 
-locale.setlocale(locale.LC_TIME, "Russian_Russia.1251")
+if platform.system() == "Windows":
+    # Для Windows
+    locale.setlocale(locale.LC_TIME, "Russian_Russia.1251")
+else:
+    # Для Linux / macOS
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 
 BASE_DIR = Path(__file__).parent
 csv_path = BASE_DIR / "sales.csv"
