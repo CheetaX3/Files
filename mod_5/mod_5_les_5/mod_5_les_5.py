@@ -7,7 +7,12 @@ import shutil
 
 BASE_DIR = Path(__file__).parent
 folder_path = BASE_DIR / 'Управление_файлами'
-folder_path.mkdir()
+
+if not folder_path.exists():
+    folder_path.mkdir()
+    print(f'Папка "{folder_path.name}" создана')
+else:
+    print(f'Папка "{folder_path.name}" уже существует')
 
 with open(folder_path / 'file1.txt', 'w', encoding='utf8') as f:
     f.write('Создание первого файла')
