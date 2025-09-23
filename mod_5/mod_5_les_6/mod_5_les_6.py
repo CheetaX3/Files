@@ -1,8 +1,14 @@
 import datetime as dt
 import locale
+import platform
 
 
-locale.setlocale(locale.LC_TIME, "Russian_Russia.1251")
+if platform.system() == "Windows":
+    # Для Windows
+    locale.setlocale(locale.LC_TIME, "Russian_Russia.1251")
+else:
+    # Для Linux / macOS
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 
 now_date = dt.datetime.now()
 print("День по счету:", now_date.day)
