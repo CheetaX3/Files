@@ -54,7 +54,10 @@ def appendleft_item(queue, item):
 
 
 def pop_item(queue):
-    queue.pop()
+    if not queue:
+        print("Очередь пуста")
+        return None
+    return queue.pop()
 
 
 def popleft_item(queue):
