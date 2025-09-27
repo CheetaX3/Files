@@ -19,7 +19,7 @@ data = [
     (76, 184)
 ]
 
-sorted_data = sorted(data, key=lambda x: x[0]/(x[1]/100 ** 2))
+sorted_data = sorted(data, key=lambda x: x[0]/((x[1]/100) ** 2))
 print(sorted_data)
 
 # Задача 3
