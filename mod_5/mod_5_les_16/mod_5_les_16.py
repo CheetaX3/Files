@@ -22,7 +22,7 @@ with open(json_path, "r", encoding="utf-8") as f:
 # Средний балл для студента John: 85.0
 
 
-def get_average_scores():
+def get_average_score():
     averages = {}
     for name, info in students.items():
         grades = info.get("grades", {})
@@ -34,12 +34,14 @@ def get_average_scores():
     return averages
 
 
-averages = get_average_scores()
+averages = get_average_score()
 
 for name, avg in averages.items():
     if avg is not None:
+        students[name]["avg"] = avg
         print(f"Средний балл для студента {name}: {avg}")
     else:
+        students[name]["avg"] = None
         print(f"У студента {name}: нет оценок")
 
 # Задание 2: Наилучший и худший студент
@@ -51,35 +53,37 @@ for name, avg in averages.items():
 
 
 def get_worst_student():
-    def average(grades: dict) -> float:
-        return sum(grades.values()) / len(grades) if grades else 0
+    valid_students = {name: info["avg"] for name, info in students.items() if info["avg"] is not None}
 
+    if not valid_students:
+        return None, None
 
-    worst_student = min(students, key=lambda name: average(students[name].get("grades", {})))
-    worst_student_average = average(students[worst_student].get("grades", {}))
-    return worst_student, round(worst_student_average, 2)
+    worst_student = min(valid_students, key=valid_students.get)
+    return worst_student, valid_students[worst_student]
 
 
 def get_best_student():
-    def average(grades: dict) -> float:
-        return sum(grades.values()) / len(grades) if grades else 0
+    valid_students = {name: info["avg"] for name, info in students.items() if info["avg"] is not None}
 
-    best_student = max(students, key=lambda name: average(students[name].get("grades", {})))
-    best_student_average = average(students[best_student].get("grades", {}))
-    return best_student, round(best_student_average, 2)
+    if not valid_students:
+        return None, None
+
+    best_student = max(valid_students, key=valid_students.get)
+    return best_student, valid_students[best_student]
 
 
 worst_student, worst_student_average = get_worst_student()
 best_student, best_student_average = get_best_student()
 
-print(f"Наилучший студент: {worst_student} (Средний балл: {worst_student_average})")
-print(f"Худший студент: {best_student} (Средний балл: {best_student_average})")
+print(f"Худший студент: {worst_student} (Средний балл: {worst_student_average})")
+print(f"Наилучший студент: {best_student} (Средний балл: {best_student_average})")
 
 # Задание 3: Поиск по имени
 # Функция find_student(name), которая принимает имя студента
 # в качестве аргумента и выводит информацию о нем, если такой студент
 # есть в словаре students. В противном случае, выводит
 # сообщение "Студент с таким именем не найден".
+
 
 def find_student(name):
     if name in students:
