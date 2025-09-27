@@ -22,12 +22,12 @@ while True:
 comb_gen = combinations(deck, number_of_cards)
 
 # выводим первые 10 комбинаций для примера
-print(f"\nПервые 10 комбинаций из {number_of_cards} карт:")
-for i, combo in enumerate(comb_gen, start=1):
-    print(combo)
-    if i >= 10:
-        break
-print("...")
+# print(f"\nПервые 10 комбинаций из {number_of_cards} карт:")
+# for i, combo in enumerate(comb_gen, start=1):
+#     print(combo)
+#     if i >= 10:
+#         break
+# print("...")
 
 # сохраняем все комбинации в файл
 BASE_DIR = Path(__file__).parent
