@@ -23,13 +23,11 @@ total_sales = 0
 for row in rows[1:]:
     total_sales += int(row[2])
 
-max_sale_amount = 0
-max_sale_product = None
+product_sales = {}
 for row in rows[1:]:
-    sale_amount = int(row[2])
-    if sale_amount > max_sale_amount:
-        max_sale_amount = sale_amount
-        max_sale_product = row[1]
+    product_sales[row[1]] = product_sales.get(row[1], 0) + int(row[2])
+
+max_sale_product = max(product_sales, key=product_sales.get)
 
 month_sales = {}
 for row in rows[1:]:
